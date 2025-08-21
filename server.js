@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const router = require('./routes/auth');
+const router = require('./routes/auth.routes');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
@@ -12,8 +12,12 @@ app.use(express.json());
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/apartment_management");
 
 // Import routes
-const authRoutes = require('./routes/auth');
+const authRoutes = require('./routes/auth.routes');
 app.use('/api/auth', authRoutes);
+
+const roomRoutes = require('./routes/room.routes');
+app.use('/api/rooms', roomRoutes);
+
 
 // Routes test 
 app.get('/api/hello', (req, res) => {
