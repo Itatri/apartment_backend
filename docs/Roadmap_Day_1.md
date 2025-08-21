@@ -1,22 +1,14 @@
-📅 Day 1 – Khởi tạo project
-1. Tạo Backend (Node.js + Express)
-Bước 1: Tạo thư mục backend
-```
-mkdir backend
-cd backend
-npm init -y
-```
+📅 Day 1 – Khởi tạo project (Angular 17 + Node.js API)
+1. Backend (Node.js + Express)
 
-Bước 2: Cài thư viện cần thiết
-```
-npm install express cors mongoose dotenv
-npm install --save-dev nodemon
-```
+Phần này giữ nguyên như trước:
 
-Bước 3: Tạo file server.js
+Tạo thư mục backend
 
-```javascript
-// backend/server.js
+Cài express, cors, dotenv
+
+File server.js:
+
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
@@ -25,58 +17,48 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Route test
 app.get("/api/hello", (req, res) => {
   res.json({ message: "Hello from Node.js API 🚀" });
 });
 
-// Chạy server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
-```
-
-```
-Bước 4: Thêm script chạy trong package.json
-```
-"scripts": {
-  "start": "node server.js",
-  "dev": "nodemon server.js"
-}
-```
-
-```
-Bước 5: Chạy thử server
-npm run dev
-```
 
 
-Mở trình duyệt: http://localhost:5000/api/hello
+👉 Chạy thử: http://localhost:5000/api/hello
 
-👉 Nếu hiện { "message": "Hello from Node.js API 🚀" } là ok.
-
-2. Tạo Frontend (Angular)
-Bước 1: Cài Angular CLI (nếu chưa cài)
-```
-npm install -g @angular/cli
-```
-Bước 2: Tạo project Angular
-```
-ng new frontend
-cd frontend
+2. Frontend (Angular 17+ Standalone)
+Bước 1: Tạo dự án Angular
+ng new apartment_frontend --standalone
+cd apartment_frontend
 ng serve
-```
+
 
 Mở http://localhost:4200
- để xem Angular chạy.
+ để kiểm tra.
 
-3. Gọi API từ Angular
-Bước 1: Tạo service gọi API
-```
+Bước 2: Bật HttpClient trong cấu hình toàn cục
+
+File src/app/app.config.ts:
+
+import { ApplicationConfig } from '@angular/core';
+import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
+import { routes } from './app.routes';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideRouter(routes),
+    provideHttpClient() // 👈 thêm dòng này để gọi API
+  ]
+};
+
+Bước 3: Tạo Service gọi API
 ng generate service services/api
-```
 
-File src/app/services/api.service.ts:
-```
+
+File src/app/services/api.ts:
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -85,7 +67,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ApiService {
-  private baseUrl = 'http://localhost:5000/api'; // backend
+  private baseUrl = 'http://localhost:5000/api';
 
   constructor(private http: HttpClient) {}
 
@@ -93,52 +75,37 @@ export class ApiService {
     return this.http.get(`${this.baseUrl}/hello`);
   }
 }
-```
 
-Bước 2: Import HttpClientModule
+Bước 4: Gọi API trong app.ts
 
-Trong src/app/app.module.ts:
-```
-import { HttpClientModule } from '@angular/common/http';
-
-@NgModule({
-  declarations: [...],
-  imports: [
-    ...,
-    HttpClientModule
-  ],
-  bootstrap: [...]
-})
-export class AppModule { }
-
-Bước 3: Gọi API trong AppComponent
-
-File src/app/app.component.ts:
+File src/app/app.ts:
 
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from './services/api.service';
+import { ApiService } from './services/api';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
+  imports: [],
   template: `
     <h1>{{ message }}</h1>
-  `
+  `,
+  styleUrl: './app.css'
 })
 export class AppComponent implements OnInit {
-  message: string = 'Loading...';
+  message = 'Loading...';
 
   constructor(private api: ApiService) {}
 
   ngOnInit() {
-    this.api.getHello().subscribe((res) => {
+    this.api.getHello().subscribe(res => {
       this.message = res.message;
     });
   }
 }
-```
 
-✅ Kết quả Day 1:
+✅ Kết quả Day 1
 
-Backend: API chạy ở http://localhost:5000/api/hello.
+Backend: API chạy ở http://localhost:5000/api/hello
 
-Frontend: Angular hiển thị "Hello from Node.js API 🚀" khi load trang.
+Frontend: Angular hiển thị Hello from Node.js API 🚀
