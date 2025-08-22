@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
 // Thêm phòng mới
 router.post("/", async (req, res) => {
     try {
-        console.log(req.body); // Thêm dòng này để kiểm tra dữ liệu
+        // console.log(req.body); // Thêm dòng này để kiểm tra dữ liệu
         const room = new Room(req.body);
         await room.save();
         res.json(room);

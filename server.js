@@ -18,6 +18,9 @@ app.use('/api/auth', authRoutes);
 const roomRoutes = require('./routes/room.routes');
 app.use('/api/rooms', roomRoutes);
 
+const tenantRoutes = require('./routes/tenant.routes');
+app.use('/api/tenants', tenantRoutes);
+
 
 // Routes test 
 app.get('/api/hello', (req, res) => {
