@@ -26,6 +26,9 @@ app.use('/api/rooms', roomRoutes);
 const tenantRoutes = require('./routes/tenant.routes');
 app.use('/api/tenants', tenantRoutes);
 
+const invoiceRoutes = require('./routes/invoice.routes');
+app.use('/api/invoices', invoiceRoutes); 
+
 
 // Routes test 
 app.get('/api/hello', (req, res) => {
