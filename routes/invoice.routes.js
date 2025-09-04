@@ -6,6 +6,7 @@ const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const path = require('path');
 const QRCode = require('qrcode');
+const verifyToken = require('../middleware/auth.js').verifyToken;
 
 const router = express.Router();
 
@@ -163,7 +164,7 @@ router.put('/:id', async(req, res) => {
 })
 
 // Delete 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', verifyToken(['Admin','Owner']) ,async (req, res) => {
     await Invoice.findByIdAndDelete(req.params.id);
     res.json({message: 'Invoice deleted'});
 })

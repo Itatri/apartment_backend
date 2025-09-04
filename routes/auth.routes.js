@@ -8,14 +8,14 @@ const router = express.Router();
 // Đăng ký 
 router.post('/register', async (req, res) => {
     try {
-        const {username, password} = req.body;
+        const {username, password, email, role} = req.body;
         const existingUser = await User.findOne({ username });
         if (existingUser) {
             return res.status(400).json({ message: 'Username already exists' });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({username, password: hashedPassword});
+        const newUser = new User({username, password: hashedPassword, email, role});
 
         await newUser.save();
         res.status(201).json({ message: 'User registered successfully' });
@@ -39,7 +39,7 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ message: 'Invalid password' });
         }
 
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET || "secret123", { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET || "secret123", { expiresIn: '1h' });
 
         res.json({token, username: user.username});
 
