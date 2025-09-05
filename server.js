@@ -29,6 +29,9 @@ app.use('/api/tenants', tenantRoutes);
 const invoiceRoutes = require('./routes/invoice.routes');
 app.use('/api/invoices', invoiceRoutes); 
 
+const dashboardRoutes = require('./routes/dashboard.routes');
+app.use('/api/dashboard', dashboardRoutes);
+
 
 // Routes test 
 app.get('/api/hello', (req, res) => {
